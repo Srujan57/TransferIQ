@@ -1,0 +1,22 @@
+# Python environment
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Data (Keep raw/processed files local)
+data/
+!data/.keep 
+
+# Model files
+models/*.pkl
+models/*.joblib
+
+# IDE/System
+.vscode/
+.DS_Store
+
+# Results
+results/
+logs/
+.env
