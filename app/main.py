@@ -169,22 +169,21 @@ elif page == "Player Explorer":
 
     st.markdown(f"**{len(filtered):,} players**")
 
-    # Display table — no League, no Club
+    # Display table — no League, no Club, no Error %
     display_cols = [
         'player_name', 'age', 'position', 'sub_position', 'Rating',
-        'actual_value', 'pred_combined', 'error_pct', 'value_gap_pct',
+        'actual_value', 'pred_combined', 'value_gap_pct',
     ]
     display_df = filtered[display_cols].sort_values('actual_value', ascending=False)
     display_df.columns = [
         'Player', 'Age', 'Pos', 'Sub-Pos', 'Rating',
-        'Actual (EUR)', 'Predicted (EUR)', 'Error %', 'Value Gap %',
+        'Actual (EUR)', 'Predicted (EUR)', 'Value Gap %',
     ]
 
     st.dataframe(
         display_df.style.format({
             'Actual (EUR)': '€{:,.0f}',
             'Predicted (EUR)': '€{:,.0f}',
-            'Error %': '{:.1f}%',
             'Value Gap %': '{:+.1f}%',
             'Rating': '{:.2f}',
         }),
