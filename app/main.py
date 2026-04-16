@@ -112,7 +112,7 @@ if page == "Overview":
     st.subheader("Predicted vs Actual Market Value")
     fig = px.scatter(
         results, x='actual_value', y='pred_combined',
-        hover_data=['player_name', 'position', 'League', 'age'],
+        hover_data=['player_name', 'position', 'age'],
         labels={'actual_value': 'Actual (EUR)', 'pred_combined': 'Predicted (EUR)'},
         opacity=0.4,
     )
@@ -132,20 +132,24 @@ if page == "Overview":
 elif page == "Player Explorer":
     st.title("Player Explorer")
 
+    # Deduplicate: keep only each player's most recent season
+    explorer_df = results.copy()
+    if 'season_year' in explorer_df.columns:
+        explorer_df = explorer_df.sort_values('season_year').drop_duplicates(
+            'player_name', keep='last'
+        )
+    else:
+        explorer_df = explorer_df.drop_duplicates('player_name', keep='last')
+
     # Filters
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     with col1:
-        leagues = ['All'] + sorted(results['League'].unique().tolist())
-        sel_league = st.selectbox("League", leagues)
-    with col2:
-        positions = ['All'] + sorted(results['position'].unique().tolist())
+        positions = ['All'] + sorted(explorer_df['position'].unique().tolist())
         sel_position = st.selectbox("Position", positions)
-    with col3:
+    with col2:
         search = st.text_input("Search Player", "")
 
-    filtered = results.copy()
-    if sel_league != 'All':
-        filtered = filtered[filtered['League'] == sel_league]
+    filtered = explorer_df.copy()
     if sel_position != 'All':
         filtered = filtered[filtered['position'] == sel_position]
     if search:
@@ -153,15 +157,14 @@ elif page == "Player Explorer":
 
     st.markdown(f"**{len(filtered):,} players**")
 
-    # Display table
+    # Display table — no League, no Club
     display_cols = [
-        'player_name', 'age', 'position', 'sub_position', 'League',
-        'current_club_name', 'Rating',
+        'player_name', 'age', 'position', 'sub_position', 'Rating',
         'actual_value', 'pred_combined', 'error_pct', 'value_gap_pct',
     ]
     display_df = filtered[display_cols].sort_values('actual_value', ascending=False)
     display_df.columns = [
-        'Player', 'Age', 'Pos', 'Sub-Pos', 'League', 'Club', 'Rating',
+        'Player', 'Age', 'Pos', 'Sub-Pos', 'Rating',
         'Actual (EUR)', 'Predicted (EUR)', 'Error %', 'Value Gap %',
     ]
 
@@ -221,7 +224,16 @@ elif page == "Undervalued / Overvalued":
     )
     top_n = st.slider("Number of players", 5, 50, 20)
 
-    filtered = results[results['actual_value'] >= min_val].copy()
+    # Deduplicate for this page too
+    deduped = results.copy()
+    if 'season_year' in deduped.columns:
+        deduped = deduped.sort_values('season_year').drop_duplicates(
+            'player_name', keep='last'
+        )
+    else:
+        deduped = deduped.drop_duplicates('player_name', keep='last')
+
+    filtered = deduped[deduped['actual_value'] >= min_val].copy()
 
     col1, col2 = st.columns(2)
 
@@ -230,7 +242,7 @@ elif page == "Undervalued / Overvalued":
         st.markdown("*Model thinks they're worth MORE than the market says*")
         undervalued = filtered.nlargest(top_n, 'value_gap_pct')
         st.dataframe(
-            undervalued[['player_name', 'position', 'League', 'age',
+            undervalued[['player_name', 'position', 'age',
                          'actual_value', 'pred_combined', 'value_gap_pct']].rename(columns={
                 'player_name': 'Player', 'position': 'Pos', 'age': 'Age',
                 'actual_value': 'Actual', 'pred_combined': 'Predicted',
@@ -246,7 +258,7 @@ elif page == "Undervalued / Overvalued":
         st.markdown("*Model thinks they're worth LESS than the market says*")
         overvalued = filtered.nsmallest(top_n, 'value_gap_pct')
         st.dataframe(
-            overvalued[['player_name', 'position', 'League', 'age',
+            overvalued[['player_name', 'position', 'age',
                         'actual_value', 'pred_combined', 'value_gap_pct']].rename(columns={
                 'player_name': 'Player', 'position': 'Pos', 'age': 'Age',
                 'actual_value': 'Actual', 'pred_combined': 'Predicted',

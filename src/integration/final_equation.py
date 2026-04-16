@@ -242,8 +242,11 @@ class TransferIQValuation:
         X_meta = np.column_stack([m2_pred, m2b_pred, m3_pred])
         final_log = self.meta_learner.predict(X_meta)
 
-        result = df[['player_name', 'market_value_in_eur', 'age', 'position',
-                      'sub_position', 'League', 'Rating', 'current_club_name']].copy()
+        pass_cols = ['player_name', 'market_value_in_eur', 'age', 'position',
+                    'sub_position', 'League', 'Rating', 'current_club_name']
+        if 'season_year' in df.columns:
+            pass_cols.append('season_year')
+        result = df[pass_cols].copy()
         result['pred_market_perception'] = np.expm1(m2_pred)
         result['pred_inherent_ability']  = np.exp(m2b_pred_log)  # Model 2b uses ln
         result['pred_club_utility']      = np.expm1(m3_pred)
