@@ -4,19 +4,22 @@ venv/
 __pycache__/
 *.py[cod]
 
-# Data (Keep raw/processed files local)
-data/
-!data/.keep 
-
-# Model files
-models/*.pkl
-models/*.joblib
-
 # IDE/System
 .vscode/
+.idea/
 .DS_Store
 
-# Results
+# Results & logs
 results/
 logs/
 .env
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Stale artifacts (root level)
+model2*.png
+model3*.png
+
+# NOTE: data/ and models/ are NOT gitignored so Streamlit Cloud can access them.
+# If your CSV is too large for GitHub, use Git LFS or host externally.
