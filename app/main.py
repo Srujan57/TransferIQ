@@ -48,6 +48,24 @@ def get_predictions(_engine):
     return _engine.predict_decomposed(df)
 
 
+@st.cache_data
+def get_latest_player_predictions(_engine):
+    """Load the per-player dataset and return only 2024-season players."""
+    import os
+    for path in ['data/master_latest_per_player.csv', 'master_latest_per_player.csv',
+                 '../data/master_latest_per_player.csv']:
+        if os.path.exists(path):
+            df = pd.read_csv(path)
+            break
+    else:
+        # Fall back to full dataset deduped
+        df = load_data()
+    result = _engine.predict_decomposed(df)
+    if 'latest_season' in result.columns:
+        result = result[result['latest_season'] == 2024]
+    return result
+
+
 # ── Sidebar ───────────────────────────────────────────────────────────────
 st.sidebar.title("⚽ TransferIQ")
 st.sidebar.markdown("**Soccer Player Valuation Engine**")
@@ -132,14 +150,8 @@ if page == "Overview":
 elif page == "Player Explorer":
     st.title("Player Explorer")
 
-    # Deduplicate: keep only each player's most recent season
-    explorer_df = results.copy()
-    if 'season_year' in explorer_df.columns:
-        explorer_df = explorer_df.sort_values('season_year').drop_duplicates(
-            'player_name', keep='last'
-        )
-    else:
-        explorer_df = explorer_df.drop_duplicates('player_name', keep='last')
+    # Use latest-season-only dataset (2024 players)
+    explorer_df = get_latest_player_predictions(engine)
 
     # Filters
     col1, col2 = st.columns(2)
@@ -224,16 +236,9 @@ elif page == "Undervalued / Overvalued":
     )
     top_n = st.slider("Number of players", 5, 50, 20)
 
-    # Deduplicate for this page too
-    deduped = results.copy()
-    if 'season_year' in deduped.columns:
-        deduped = deduped.sort_values('season_year').drop_duplicates(
-            'player_name', keep='last'
-        )
-    else:
-        deduped = deduped.drop_duplicates('player_name', keep='last')
-
-    filtered = deduped[deduped['actual_value'] >= min_val].copy()
+    # Use latest-season-only dataset (2024 players)
+    latest = get_latest_player_predictions(engine)
+    filtered = latest[latest['actual_value'] >= min_val].copy()
 
     col1, col2 = st.columns(2)
 

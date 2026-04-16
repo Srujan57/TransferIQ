@@ -246,6 +246,8 @@ class TransferIQValuation:
                     'sub_position', 'League', 'Rating', 'current_club_name']
         if 'season_year' in df.columns:
             pass_cols.append('season_year')
+        if 'latest_season' in df.columns:
+            pass_cols.append('latest_season')
         result = df[pass_cols].copy()
         result['pred_market_perception'] = np.expm1(m2_pred)
         result['pred_inherent_ability']  = np.exp(m2b_pred_log)  # Model 2b uses ln

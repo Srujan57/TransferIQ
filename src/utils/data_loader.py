@@ -18,6 +18,8 @@ def load_data(path=None):
         '../data/master_all_seasons.csv',
         'master_all_seasons.csv',
         'master_all_seasons__1_.csv',
+        'data/master_latest_per_player.csv',
+        'master_latest_per_player.csv',
     ]
     for c in candidates:
         if os.path.exists(c):
