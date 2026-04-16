@@ -1,12 +1,12 @@
 # TransferIQ — Soccer Player Valuation Engine
 
 ## Overview
-TransferIQ uses three machine learning models to predict soccer player market values across Europe's top 5 leagues, each capturing a different dimension of value:
+TransferIQ uses three machine learning models to predict soccer player market values, each capturing a different dimension of value:
 
 | Model | Concept | R² |
 |---|---|---|
 | **Model 2** — Market Perception | Prestige, international profile, league context, transfer history | ~0.76 |
-| **Model 2b** — Inherent Ability | Position-specific talent assessment (separate model per position) | ~0.69 |
+| **Model 1** — Inherent Ability | Position-specific talent assessment (separate model per position) | ~0.69 |
 | **Model 3** — Club Utility | Playing time, tactical contribution, reliability, contractual leverage | ~0.71 |
 | **Combined** (Ridge meta-learner) | Learned weighted average of all three | ~0.77 |
 
