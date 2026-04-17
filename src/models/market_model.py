@@ -6,6 +6,8 @@ import numpy as np
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 MODEL2_FEATURES = [
+    # Market perception: who IS this player? Prestige, history, market context.
+    # No on-pitch performance stats — those belong to Model 2b.
     'age', 'age_sq', 'prime_age', 'past_prime',
     'height_in_cm', 'foot_enc',
     'contract_years_remaining',
@@ -14,13 +16,8 @@ MODEL2_FEATURES = [
     'league_ranking', 'League_enc', 'sub_position_enc', 'position_enc',
     'squad_size', 'has_league_rating', 'has_fbref_data',
     'log_transfer_fee', 'Rating',
-    'appearances', 'minutes_total', 'goals_total', 'assists_total',
-    'goals_per90', 'assists_per90', 'ga_per90',
-    'xG_per90', 'xAG_per90',
-    'Successful_Dribbles', 'Big_Chances_Created',
-    'PrgC_Progression', 'PrgP_Progression', 'Possession_Lost',
-    'ga_x_rating', 'start_rate', 'mins_per_app',
-    'yellow_cards_total', 'npxG_plus_xAG_Expected', 'G_plus_A',
+    'mv_growth_ratio',
+    'log_highest_mv', 'prev_market_value', 'career_avg_rating',
 ]
 
 TARGET = 'log_market_value'

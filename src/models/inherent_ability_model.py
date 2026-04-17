@@ -7,23 +7,19 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.metrics import r2_score
 
 MODEL2B_FEATURES = [
+    # Inherent ability: what did this player DO on the pitch?
+    # Pure performance output — no market/prestige features.
     'age', 'age_sq', 'prime_age', 'past_prime',
-    'height_in_cm', 'foot_enc',
-    'contract_years_remaining',
-    'international_caps', 'international_goals', 'intl_goal_rate',
-    'rating_x_caps',
-    'league_ranking', 'League_enc', 'sub_position_enc',
-    'has_league_rating', 'has_fbref_data', 'squad_size',
-    'log_transfer_fee', 'Rating',
-    'appearances', 'minutes_total', 'goals_total', 'assists_total',
+    'height_in_cm', 'sub_position_enc', 'position_enc',
+    'Gls', 'Ast', 'G+A', 'G_minus_PK',
+    'xG_Expected', 'xAG_Expected', 'npxG_Expected', 'npxG+xAG_Expected',
+    'xG_per90', 'xAG_per90', 'npxG_per90', 'npxG_xAG_per90',
     'goals_per90', 'assists_per90', 'ga_per90',
-    'xG_per90', 'xAG_per90', 'npxG_per90',
-    'xG_Expected', 'xAG_Expected', 'npxG_plus_xAG_Expected',
-    'Successful_Dribbles', 'Big_Chances_Created', 'Possession_Lost',
-    'PrgC_Progression', 'PrgP_Progression',
-    'MP_Playing', 'Starts_Playing',
-    'ga_x_rating', 'start_rate', 'mins_per_app',
-    'yellow_cards_total',
+    'Successful_Dribbles', 'Big_Chances_Created', 'Big_Chances_Missed',
+    'PrgC_Progression', 'PrgP_Progression', 'PrgR_Progression',
+    'Possession_Lost', 'Rating', 'ga_x_rating',
+    'total_goals', 'total_assists', 'total_minutes_played',
+    'log_highest_mv',
 ]
 
 

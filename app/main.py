@@ -15,7 +15,7 @@ import pickle
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from src.utils.data_loader import load_data
+from src.utils.data_loader import load_data, load_training_data
 from src.utils.feature_engineering import engineer_features
 from src.integration.final_equation import TransferIQValuation
 
@@ -35,35 +35,26 @@ def get_engine():
     if os.path.exists(model_path):
         return TransferIQValuation.load(model_path)
     else:
-        df = load_data()
+        df_train = load_training_data(season_cutoff=2023)
+        df_test  = load_data(test_season_cutoff=2024)
         engine = TransferIQValuation()
-        engine.train(df)
+        engine.train(df_train, df_test)
         engine.save(model_path)
         return engine
 
 
 @st.cache_data
 def get_predictions(_engine):
-    df = load_data()
+    """Load 2024-season players only for display."""
+    df = load_data(test_season_cutoff=2024)
     return _engine.predict_decomposed(df)
 
 
 @st.cache_data
 def get_latest_player_predictions(_engine):
-    """Load the per-player dataset and return only 2024-season players."""
-    import os
-    for path in ['data/master_latest_per_player.csv', 'master_latest_per_player.csv',
-                 '../data/master_latest_per_player.csv']:
-        if os.path.exists(path):
-            df = pd.read_csv(path)
-            break
-    else:
-        # Fall back to full dataset deduped
-        df = load_data()
-    result = _engine.predict_decomposed(df)
-    if 'latest_season' in result.columns:
-        result = result[result['latest_season'] == 2024]
-    return result
+    """Load 2024-season players only for display."""
+    df = load_data(test_season_cutoff=2024)
+    return _engine.predict_decomposed(df)
 
 
 # ── Sidebar ───────────────────────────────────────────────────────────────

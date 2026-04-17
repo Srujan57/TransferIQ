@@ -6,22 +6,18 @@ import numpy as np
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 MODEL3_FEATURES = [
+    # Club utility: how AVAILABLE and RELIABLE is this player?
+    # Playing time, discipline, squad context — no performance quality stats.
     'age', 'age_sq', 'prime_age', 'past_prime',
     'contract_years_remaining',
-    'appearances', 'minutes_total',
-    'MP_Playing', 'Starts_Playing',
+    'tm_appearances', 'tm_minutes', 'tm_goals', 'tm_assists',
+    'MP_Playing', 'Starts_Playing', 'Min_Playing',
     'start_rate', 'mins_per_app',
-    'goals_total', 'assists_total',
-    'goals_per90', 'assists_per90', 'ga_per90',
-    'xG_per90', 'xAG_per90', 'npxG_per90', 'npxG_xAG_per90',
-    'xG_Expected', 'xAG_Expected', 'npxG_plus_xAG_Expected',
-    'Successful_Dribbles', 'Big_Chances_Created', 'Possession_Lost',
-    'PrgC_Progression', 'PrgP_Progression',
-    'Rating', 'ga_x_rating',
-    'yellow_cards_total', 'red_cards_total',
+    'tm_yellows', 'tm_reds', 'CrdY', 'CrdR',
     'squad_size',
     'league_ranking', 'League_enc',
     'sub_position_enc', 'position_enc',
+    'log_highest_mv', 'prev_market_value',
 ]
 
 TARGET = 'log_market_value'
