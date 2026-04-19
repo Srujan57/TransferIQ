@@ -1,23 +1,25 @@
 """
-Model 3 — Player Value to Parent Club (Club Utility)
+Model 3 — Club Utility (Availability, Playing Time, Discipline)
+
+Shared foundation features + availability/reliability extensions.
+No performance quality stats — those belong to Model 2b.
 """
 
 import numpy as np
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 MODEL3_FEATURES = [
-    # Club utility: how AVAILABLE and RELIABLE is this player?
-    # Playing time, discipline, squad context — no performance quality stats.
+    # ── Foundation (shared with all 3 models) ─────────────────────────────
     'age', 'age_sq', 'prime_age', 'past_prime',
-    'contract_years_remaining',
+    'sub_position_enc', 'position_enc',
+    'log_highest_mv', 'prev_market_value', 'career_avg_rating',
+    'Rating', 'contract_years_remaining',
+    # ── Utility extensions ────────────────────────────────────────────────
     'tm_appearances', 'tm_minutes', 'tm_goals', 'tm_assists',
     'MP_Playing', 'Starts_Playing', 'Min_Playing',
     'start_rate', 'mins_per_app',
     'tm_yellows', 'tm_reds', 'CrdY', 'CrdR',
-    'squad_size',
-    'league_ranking', 'League_enc',
-    'sub_position_enc', 'position_enc',
-    'log_highest_mv', 'prev_market_value',
+    'squad_size', 'league_ranking', 'League_enc',
 ]
 
 TARGET = 'log_market_value'
@@ -26,7 +28,7 @@ TARGET = 'log_market_value'
 def build_model3():
     """Return an untrained Model 3 estimator."""
     return HistGradientBoostingRegressor(
-        max_iter=800, max_depth=7, learning_rate=0.04,
+        max_iter=1500, max_depth=6, learning_rate=0.03,
         min_samples_leaf=15, l2_regularization=0.5, max_bins=255,
         random_state=42, early_stopping=True,
         n_iter_no_change=50, validation_fraction=0.1,

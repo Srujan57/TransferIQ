@@ -1,5 +1,8 @@
 """
-Model 1 — Position-Split Value Model (Inherent Ability by Position)
+Model 2b — Inherent Ability (Position-Specific On-Pitch Output)
+
+Shared foundation features + performance-specific extensions.
+Pure on-pitch quality metrics — no market/prestige features.
 """
 
 import numpy as np
@@ -7,27 +10,28 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.metrics import r2_score
 
 MODEL2B_FEATURES = [
-    # Inherent ability: what did this player DO on the pitch?
-    # Pure performance output — no market/prestige features.
+    # ── Foundation (shared with all 3 models) ─────────────────────────────
     'age', 'age_sq', 'prime_age', 'past_prime',
-    'height_in_cm', 'sub_position_enc', 'position_enc',
+    'sub_position_enc', 'position_enc',
+    'log_highest_mv', 'prev_market_value', 'career_avg_rating',
+    'Rating', 'contract_years_remaining',
+    # ── Ability extensions ────────────────────────────────────────────────
     'Gls', 'Ast', 'G+A', 'G_minus_PK',
     'xG_Expected', 'xAG_Expected', 'npxG_Expected', 'npxG+xAG_Expected',
     'xG_per90', 'xAG_per90', 'npxG_per90', 'npxG_xAG_per90',
     'goals_per90', 'assists_per90', 'ga_per90',
     'Successful_Dribbles', 'Big_Chances_Created', 'Big_Chances_Missed',
     'PrgC_Progression', 'PrgP_Progression', 'PrgR_Progression',
-    'Possession_Lost', 'Rating', 'ga_x_rating',
+    'Possession_Lost', 'ga_x_rating',
     'total_goals', 'total_assists', 'total_minutes_played',
-    'log_highest_mv',
 ]
 
 
 def build_position_model():
     """Return an untrained per-position estimator."""
     return HistGradientBoostingRegressor(
-        max_iter=800, max_depth=9, learning_rate=0.04,
-        min_samples_leaf=12, l2_regularization=0.3, max_bins=255,
+        max_iter=1500, max_depth=6, learning_rate=0.03,
+        min_samples_leaf=15, l2_regularization=0.5, max_bins=255,
         random_state=42, early_stopping=True,
         n_iter_no_change=50, validation_fraction=0.1,
     )
