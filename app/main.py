@@ -349,9 +349,6 @@ elif page == "Model Performance":
     + {weights.get('model2b', 0):.3f} × Inherent Ability
     + {weights.get('model3', 0):.3f} × Club Utility
     + {weights.get('intercept', 0):.3f}**
-
-    These weights were learned by a Ridge regression on held-out player data,
-    ensuring the combination is optimized without overfitting.
     """)
 
 
@@ -359,5 +356,5 @@ elif page == "Model Performance":
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     "Built with [Streamlit](https://streamlit.io) • "
-    "Models: HistGradientBoosting + Ridge"
+    "Models: HistGradientBoosting + Equal-Weighted Ensemble"
 )
