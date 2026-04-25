@@ -340,10 +340,10 @@ elif page == "Model Performance":
     st.plotly_chart(fig, use_container_width=True)
 
     # Meta-learner weights
-    st.subheader("Meta-Learner Weights")
+    st.subheader("Equal Weights")
     weights = m.get('meta_weights', {})
     st.markdown(f"""
-    The combined prediction is a learned weighted average:
+    The combined prediction is an equal weighted average:
 
     **Predicted Value = {weights.get('model2', 0):.3f} × Market Perception
     + {weights.get('model2b', 0):.3f} × Inherent Ability
